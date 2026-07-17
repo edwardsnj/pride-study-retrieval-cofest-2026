@@ -14,6 +14,6 @@ De-glycosylated N-glycopeptides, based on the use of PNGase F and variable modif
 
 ## [Project description](https://docs.google.com/document/d/19IhZZCkSDMxfsL9_kliZi6n9SMeQbrwM0TVgOtJ7mI8)
 
-
+## [Project Pitch](https://raw.githubusercontent.com/EdwardsLabProjects/pride-study-retrieval-cofest-2026/refs/heads/main/PRIDE%20Study%20Retrieval%20-%20CoFest%202026.ppt)
 
 
