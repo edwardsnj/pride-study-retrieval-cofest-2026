@@ -199,7 +199,7 @@ def train_document_classifier(embeddings, tfidf, train_acc, train_y, test_acc, t
 
     return model
 
-def top_features(model,nembed=0,use_embed=True,use_tfidf=True):
+def top_features(model,nembed=0,use_embed=True,use_tfidf=True,**kwargs):
     
     if use_embed:
         # Calculate significant embedding coefficients
