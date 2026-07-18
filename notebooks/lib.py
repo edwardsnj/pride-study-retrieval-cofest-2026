@@ -3,7 +3,7 @@ GITHUB = "https://raw.githubusercontent.com/EdwardsLabProjects/pride-study-retri
 
 import os, os.path, subprocess
 
-VERSION='1.0.17'
+VERSION='1.0.18'
 
 def download_embeddings(model="openai-3-small"):
     # files...
@@ -155,8 +155,9 @@ def select_by_embedding_proximity(tp, emb, n=1000):
     avg_emb = emb[tp_accs].mean(axis=1).values.reshape(1, -1)
     sims = cosine_similarity(avg_emb, emb.values.T)[0]
     sim_series = pd.Series(sims, index=emb.columns)
-    top_accs = set(sim_series.nlargest(n).index.tolist())
-    return list(top_accs | set(tp_accs))
+    non_tp_sims = sim_series.drop(labels=tp_accs, errors='ignore')
+    top_non_tp = non_tp_sims.nlargest(max(0, n - len(tp_accs))).index.tolist()
+    return tp_accs + top_non_tp
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, accuracy_score
