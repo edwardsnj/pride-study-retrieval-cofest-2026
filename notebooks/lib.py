@@ -95,8 +95,59 @@ def split_train_test(allacc, seeds, neg_seeds, test_size=0.2, bgsize=25):
 
       return train_accessions, train_y, test_accessions, test_y
 
+from sklearn.feature_extraction.text import TfidfVectorizer
 
-VERSION='1.0.2'
+def create_tfidf_features(md_dataframe, train_accessions, train_y, test_accessions, positive_only=False,**kwargs):
+    # Filter training accessions to include only 'true cases' (where train_y is 1)
+    if positive_only:
+      true_train_accessions = [acc for acc, y_val in zip(train_accessions, train_y) if y_val == 1]
+    else:
+      true_train_accessions = train_accessions
+
+    # Prepare true case training data for TF-IDF fitting
+    # Ensure the order of texts matches the order of true_train_accessions for correct indexing
+    md_train_true_cases = md_dataframe[md_dataframe['prideacc'].isin(true_train_accessions)].set_index('prideacc').loc[true_train_accessions]
+    train_texts_true_cases = md_train_true_cases['text']
+
+    # Initialize TfidfVectorizer
+    tfidf_vectorizer = TfidfVectorizer(**kwargs)
+
+    # Fit TfidfVectorizer ONLY on the true cases of the training data
+    tfidf_vectorizer.fit(train_texts_true_cases)
+
+    # Prepare ALL training data for transformation
+    md_train_all = md_dataframe[md_dataframe['prideacc'].isin(train_accessions)].set_index('prideacc').loc[train_accessions]
+    train_texts_all = md_train_all['text']
+
+    # Transform ALL training data using the fitted vectorizer
+    tfidf_train_matrix = tfidf_vectorizer.transform(train_texts_all)
+
+    # Create a DataFrame for training TF-IDF values
+    tfidf_df_train = pd.DataFrame(
+        tfidf_train_matrix.toarray(),
+        index=train_accessions, # Index by pride accessions
+        columns=tfidf_vectorizer.get_feature_names_out()
+    )
+
+    # Prepare testing data for TF-IDF transformation
+    md_test = md_dataframe[md_dataframe['prideacc'].isin(test_accessions)].set_index('prideacc').loc[test_accessions]
+    test_texts = md_test['text']
+
+    # Apply the fitted TF-IDF model to test data (transform only)
+    tfidf_test_matrix = tfidf_vectorizer.transform(test_texts)
+
+    # Create a DataFrame for testing TF-IDF values
+    tfidf_df_test = pd.DataFrame(
+        tfidf_test_matrix.toarray(),
+        index=test_accessions, # Index by pride accessions
+        columns=tfidf_vectorizer.get_feature_names_out()
+    )
+
+    tfidf_df = pd.concat([tfidf_df_train, tfidf_df_test]).T
+
+    return tfidf_df, tfidf_vectorizer
+
+VERSION='1.0.3'
 print(f"Version: {VERSION}")
 
    
