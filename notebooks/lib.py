@@ -4,7 +4,7 @@ GITHUB = "https://raw.githubusercontent.com/EdwardsLabProjects/pride-study-retri
 import os, os.path, subprocess
 import pandas
 
-VERSION='1.0.11'
+VERSION='1.0.12'
 
 def download_embeddings(model="openai-3-small"):
     # files...
