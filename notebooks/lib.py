@@ -153,7 +153,7 @@ def select_by_embedding_proximity(tp, emb, n=1000):
     sim_series = pd.Series(sims, index=emb.columns)
     non_tp_sims = sim_series.drop(labels=tp_accs, errors='ignore')
     top_non_tp = non_tp_sims.nlargest(max(0, n - len(tp_accs))).index.tolist()
-    return tp_accs + top_non_tp
+    return tp_accs + top_non_tp, avg_emb
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, accuracy_score
