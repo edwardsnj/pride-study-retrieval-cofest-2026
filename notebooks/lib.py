@@ -209,15 +209,14 @@ def top_features(logreg_model,tfidf_model,nembed=0,use_embed=True,use_tfidf=True
 
     if use_tfidf:
         # Get the TF-IDF feature names from the fitted vectorizer
-        tfidf_feature_names = tfidf.get_feature_names_out()
+        tfidf_feature_names = tfidf_model.get_feature_names_out()
 
         # The trained_model.coef_ is an array of coefficients for all features (embeddings + tfidf)
         # We need the coefficients corresponding to the TF-IDF features
-        tfidf_coefficients = trained_model.coef_[0][nembed:]
+        tfidf_coefficients = logreg_model.coef_[0][nembed:]
 
         # Calculate and print the number of non-zero TF-IDF coefficients
         non_zero_tfidf_coeffs = np.sum(tfidf_coefficients != 0)
-        print(f"Number of TF-IDF dimensions with non-zero coefficients: {non_zero_tfidf_coeffs}")
 
         # Create a DataFrame to link feature names with their coefficients
         feature_importance_df = pd.DataFrame({
@@ -229,9 +228,7 @@ def top_features(logreg_model,tfidf_model,nembed=0,use_embed=True,use_tfidf=True
         feature_importance_df['Abs_Coefficient'] = feature_importance_df['Coefficient'].abs()
         most_important_features = feature_importance_df.sort_values(by='Abs_Coefficient', ascending=False)
 
-        # Display the top 20 most important TF-IDF features without the 'Abs_Coefficient' column
-        print("\nTop 20 Most Important TF-IDF Features (without Abs_Coefficient):")
-        display(most_important_features.drop(columns=['Abs_Coefficient']).head(20))
+        return significant_embedding_coeffs,non_zero_tfidf_coeffs,most_important_features.drop(columns=['Abs_Coefficient'])
 
 print(f"Version: {VERSION}")
 
