@@ -1,9 +1,9 @@
 BASEURL = "https://edwardslab.bmcb.georgetown.edu/~nedwards/dropbox/6ItUS2tEdC/"
 GITHUB = "https://raw.githubusercontent.com/EdwardsLabProjects/pride-study-retrieval-cofest-2026/refs/heads/main/data/"
 
-import os, os.path, subprocess
+import os, os.path, subprocess, sys
 
-VERSION='1.0.33'
+VERSION='1.0.34'
 
 def download_embeddings(model="openai-3-small"):
     # files...
@@ -242,7 +242,7 @@ def score_all_studies(model, emb, md, tfidf_vectorizer, train_accessions, tp, tn
     batches = [allacc[i:i+batch_size] for i in range(0, len(allacc), batch_size)]
 
     all_probs = []
-    for batch in tqdm(batches, desc="Scoring studies", ascii=True):
+    for batch in tqdm(batches, desc="Scoring studies", ascii=True, file=sys.stdout):
         feature_parts = []
         if use_embed:
             feature_parts.append(emb[batch].values.T)
