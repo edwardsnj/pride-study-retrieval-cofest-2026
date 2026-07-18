@@ -4,7 +4,7 @@ GITHUB = "https://raw.githubusercontent.com/EdwardsLabProjects/pride-study-retri
 import os, os.path, subprocess
 import pandas
 
-VERSION='1.0.8'
+VERSION='1.0.9'
 
 def download_embeddings(model="openai-3-small"):
     # files...
@@ -109,7 +109,7 @@ def create_tfidf_features(md_dataframe, train_accessions, train_y, test_accessio
     # Prepare true case training data for TF-IDF fitting
     # Ensure the order of texts matches the order of true_train_accessions for correct indexing
     md_fit_cases = md_dataframe[md_dataframe['prideacc'].isin(fit_accessions)].set_index('prideacc').loc[fit_accessions]
-    texts_fit_cases = md_train_true_cases['text']
+    texts_fit_cases = md_fit_cases['text']
 
     # Initialize TfidfVectorizer
     tfidf_vectorizer = TfidfVectorizer(**kwargs)
