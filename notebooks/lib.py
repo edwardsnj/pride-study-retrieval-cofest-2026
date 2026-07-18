@@ -4,7 +4,7 @@ GITHUB = "https://raw.githubusercontent.com/EdwardsLabProjects/pride-study-retri
 import os, os.path, subprocess
 import pandas
 
-VERSION='1.0.7'
+VERSION='1.0.8'
 
 def download_embeddings(model="openai-3-small"):
     # files...
@@ -102,20 +102,20 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 def create_tfidf_features(md_dataframe, train_accessions, train_y, test_accessions, positive_only=False,**kwargs):
     # Filter training accessions to include only 'true cases' (where train_y is 1)
     if positive_only:
-      true_train_accessions = [acc for acc, y_val in zip(train_accessions, train_y) if y_val == 1]
+      fit_accessions = [acc for acc, y_val in zip(train_accessions, train_y) if y_val == 1]
     else:
-      true_train_accessions = train_accessions
+      fit_accessions = train_accessions
 
     # Prepare true case training data for TF-IDF fitting
     # Ensure the order of texts matches the order of true_train_accessions for correct indexing
-    md_train_true_cases = md_dataframe[md_dataframe['prideacc'].isin(true_train_accessions)].set_index('prideacc').loc[true_train_accessions]
-    train_texts_true_cases = md_train_true_cases['text']
+    md_fit_cases = md_dataframe[md_dataframe['prideacc'].isin(fit_accessions)].set_index('prideacc').loc[fit_accessions]
+    texts_fit_cases = md_train_true_cases['text']
 
     # Initialize TfidfVectorizer
     tfidf_vectorizer = TfidfVectorizer(**kwargs)
 
     # Fit TfidfVectorizer ONLY on the true cases of the training data
-    tfidf_vectorizer.fit(train_texts_true_cases)
+    tfidf_vectorizer.fit(texts_fit_cases)
 
     # Prepare ALL training data for transformation
     md_train_all = md_dataframe[md_dataframe['prideacc'].isin(train_accessions)].set_index('prideacc').loc[train_accessions]
