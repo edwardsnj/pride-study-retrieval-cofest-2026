@@ -3,7 +3,7 @@ GITHUB = "https://raw.githubusercontent.com/EdwardsLabProjects/pride-study-retri
 
 import os, os.path, subprocess
 
-VERSION='1.0.31'
+VERSION='1.0.32'
 
 def download_embeddings(model="openai-3-small"):
     # files...
@@ -230,7 +230,7 @@ def top_features(logreg_model,tfidf_model,nembed=0,use_embed=True,use_tfidf=True
 
     all_features = pd.concat(parts, ignore_index=True)
     all_features['Abs_Coefficient'] = all_features['Coefficient'].abs()
-    most_important_features = all_features.sort_values(by='Abs_Coefficient', ascending=False)
+    most_important_features = all_features[all_features['Coefficient'] != 0].sort_values(by='Abs_Coefficient', ascending=False)
 
     return significant_embedding_coeffs, non_zero_tfidf_coeffs, most_important_features.drop(columns=['Abs_Coefficient'])
 
