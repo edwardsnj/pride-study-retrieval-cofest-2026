@@ -4,7 +4,7 @@ GITHUB = "https://raw.githubusercontent.com/EdwardsLabProjects/pride-study-retri
 import os, os.path, subprocess
 import pandas
 
-VERSION='1.0.10'
+VERSION='1.0.11'
 
 def download_embeddings(model="openai-3-small"):
     # files...
@@ -147,7 +147,7 @@ def create_tfidf_features(md_dataframe, train_accessions, train_y, test_accessio
 
     tfidf_df = pd.concat([tfidf_df_train, tfidf_df_test]).T
 
-    return tfidf_df_test, tfidf_vectorizer
+    return tfidf_df, tfidf_vectorizer
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, accuracy_score
