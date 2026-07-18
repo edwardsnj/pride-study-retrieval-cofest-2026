@@ -3,7 +3,7 @@ GITHUB = "https://raw.githubusercontent.com/EdwardsLabProjects/pride-study-retri
 
 import os, os.path, subprocess
 
-VERSION='1.0.21'
+VERSION='1.0.22'
 
 def download_embeddings(model="openai-3-small"):
     # files...
@@ -74,7 +74,7 @@ def split_train_test(allacc, seeds, neg_seeds, test_size=0.2, bgsize=25):
       test_accessions = list(pos_test_accs)
 
       num_train_samples = len(pos_train_accs)
-      num_bg_train_samples = nbgsel*test_size
+      num_bg_train_samples = int(round(nbgsel*(1-test_size)))
       num_test_samples = len(pos_test_accs)
       num_bg_test_samples = nbgsel-num_bg_train_samples
 
